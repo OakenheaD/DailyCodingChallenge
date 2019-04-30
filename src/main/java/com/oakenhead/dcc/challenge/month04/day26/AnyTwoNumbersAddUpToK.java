@@ -2,9 +2,11 @@ package com.oakenhead.dcc.challenge.month04.day26;
 
 import com.oakenhead.dcc.challenge.AbstractCodingChallenge;
 import com.oakenhead.dcc.challenge.PairValue;
+import org.h2.util.IntArray;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -52,6 +54,26 @@ public class AnyTwoNumbersAddUpToK extends AbstractCodingChallenge<Boolean, IntA
     }
 
     private boolean isThereASumInThisArray(final int[] array, final int sum) {
-        return false 
+
+        final HashSet<Integer> counterSums = new HashSet<>(array.length);
+
+        for (int i = 0; i < array.length; i++) {
+
+            final int counterSum = sum - array[i];
+
+            if (counterSums.contains(counterSum)) {
+
+                return true;
+
+            } else {
+
+                counterSums.add(array[i]);
+
+            }
+
+        }
+
+        return false;
+
     }
 }
