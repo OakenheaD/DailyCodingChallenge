@@ -3,10 +3,12 @@ package com.oakenhead.dcc.challenge.month04.day28;
 import com.oakenhead.dcc.challenge.AbstractCodingChallenge;
 import com.oakenhead.dcc.challenge.PairValue;
 import com.oakenhead.dcc.challenge.beans.BinaryNode;
+import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.List;
 
+@Component
 public class SerializeTree extends AbstractCodingChallenge<Boolean, PairValue<BinaryNode, String>> {
 
     @Override
@@ -61,13 +63,13 @@ public class SerializeTree extends AbstractCodingChallenge<Boolean, PairValue<Bi
 
     private String serializeNode(final BinaryNode node) {
 
-
+        return serializeNodeRecursive(node);
 
     }
 
     private BinaryNode deserializeNode(final String nodeStr) {
 
-        return
+        return deserializeNodeRecursive(nodeStr);
 
     }
 
@@ -90,16 +92,16 @@ public class SerializeTree extends AbstractCodingChallenge<Boolean, PairValue<Bi
         }
 
         final String withoutBraces = nodeStr.substring(1, nodeStr.length() - 1);
-        final String[] parts = nodeStr.split("#");
+        final String[] parts = withoutBraces.split("#");
 
         final String mainValueUnSanitized = !parts[0].contains("&hash_sanitized;") ?
                 parts[0] :
                 parts[0].replaceAll("&hash_sanitized;", "#").replaceAll("&ampersand_san;","&");
 
-        final BinaryNode leftValue = node.left == null ? "null" : serializeNodeRecursive(node.left);
-        final BinaryNode rightValue = node.right == null ? "null" : serializeNodeRecursive(node.right);
+        final BinaryNode leftValue = deserializeNode(parts[1]);
+        final BinaryNode rightValue = deserializeNode(parts[2]);
 
-        return new BinaryNode()
+        return new BinaryNode(mainValueUnSanitized, leftValue, rightValue);
 
     }
 }
