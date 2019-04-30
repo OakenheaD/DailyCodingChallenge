@@ -73,15 +73,27 @@ public class SerializeTree extends AbstractCodingChallenge<Boolean, PairValue<Bi
 
     }
 
+    private static final String INNER_SEPARATOR = "#";
+    private static final String INNER_SEPARATOR_SAN = "&hash_sanitized;";
+    private static final String BRACE_UP = "{";
+    private static final String BRACE_UP_SAN = "&brace_up;";
+    private static final String BRACE_DOWN = "}";
+    private static final String BRACE_DOWN_SAN = "&brace_down;";
+    private static final String AMPERSAND = "&";
+    private static final String AMPERSAND_SAN = "&ampersand_san;";
+
     private String serializeNodeRecursive(final BinaryNode node) {
 
         final String leftValue = node.left == null ? "null" : serializeNodeRecursive(node.left);
         final String rightValue = node.right == null ? "null" : serializeNodeRecursive(node.right);
-        final String mainValueSanitized = !node.value.contains("#") ?
-                node.value :
-                node.value.replaceAll("&", "&ampersand_san;").replaceAll("#", "&hash_sanitized;");
 
-        return String.format("{%s#%s#%s}", mainValueSanitized, leftValue, rightValue);
+        final String mainValueSanitized = node.value
+                .replaceAll(AMPERSAND, AMPERSAND_SAN)
+                .replaceAll(BRACE_UP, BRACE_UP_SAN)
+                .replaceAll(BRACE_DOWN, BRACE_DOWN_SAN)
+                .replaceAll(INNER_SEPARATOR, INNER_SEPARATOR_SAN);
+
+        return BRACE_UP + mainValueSanitized + INNER_SEPARATOR + leftValue + INNER_SEPARATOR + rightValue + BRACE_DOWN;
 
     }
 
@@ -92,16 +104,56 @@ public class SerializeTree extends AbstractCodingChallenge<Boolean, PairValue<Bi
         }
 
         final String withoutBraces = nodeStr.substring(1, nodeStr.length() - 1);
-        final String[] parts = withoutBraces.split("#");
+        final String[] parts = splitToParts(withoutBraces);
 
-        final String mainValueUnSanitized = !parts[0].contains("&hash_sanitized;") ?
-                parts[0] :
-                parts[0].replaceAll("&hash_sanitized;", "#").replaceAll("&ampersand_san;","&");
+        final String mainValueUnSanitized =  parts[0]
+                .replaceAll(BRACE_UP_SAN, BRACE_UP)
+                .replaceAll(BRACE_DOWN_SAN, BRACE_DOWN)
+                .replaceAll(INNER_SEPARATOR_SAN, INNER_SEPARATOR)
+                .replaceAll(AMPERSAND_SAN,AMPERSAND);
 
         final BinaryNode leftValue = deserializeNode(parts[1]);
         final BinaryNode rightValue = deserializeNode(parts[2]);
 
         return new BinaryNode(mainValueUnSanitized, leftValue, rightValue);
+
+    }
+
+    private String[] splitToParts(final String input) {
+        //assume input in the format "a#b#c" or "a#{b, c}#d"
+
+        final String[] retParts = new String[3];
+
+        int level = 0;
+        int resultsIndex = 0;
+        int stringBeginIndex = 0;
+
+        for (int i = 0; i < input.length(); i++) {
+
+            final char currentChar = input.charAt(i);
+
+            if (currentChar == BRACE_UP.charAt(0)){
+
+                level++;
+
+            }
+
+            if (currentChar == BRACE_DOWN.charAt(0)){
+
+                level--;
+
+            }
+
+            if (currentChar == INNER_SEPARATOR.charAt(0) && level == 0) {
+
+                retParts[resultsIndex++] = input.substring(stringBeginIndex, i);
+                stringBeginIndex = i;
+
+            }
+
+        }
+
+        return retParts;
 
     }
 }
