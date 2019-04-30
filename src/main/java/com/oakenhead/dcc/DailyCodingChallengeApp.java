@@ -30,12 +30,11 @@ public class DailyCodingChallengeApp {
         LOGGER.info("   ```---===started daily-coding-challenge alpha===---```   ");
 
         //post construct static init;
-        ///context.getBean(FooBar.class).doTest();
+        context.getBean(DailyCodingChallengeApp.class).runChallenges();
 
     }
 
-    @PostConstruct
-    private void postConstruct() {
+    private void runChallenges() {
 
         runChallenges(context.getBeanFactory().getBeansOfType(CodingChallenge.class).values());
 
@@ -43,8 +42,19 @@ public class DailyCodingChallengeApp {
 
     private void runChallenges(final Collection<CodingChallenge> challenges) {
 
-        challenges.stream().forEach(challenge ->
-                LOGGER.info(String.format("challenge %s of \"%s\" is  ", challenge.dateString(), challenge.shortName()) , challenge.doRunTestsAndCheckIfPass())
-                );
+        challenges.stream().forEach(this::runChallenge);
+        
+    }
+
+    private void runChallenge(final CodingChallenge challenge) {
+
+        final long challengeBegin = System.currentTimeMillis();
+        final String result = challenge.doRunTestsAndCheckIfPass() ? "success" : "fail";
+        final long challengeEnd = System.currentTimeMillis();
+
+        final String challengeDuration = Long.toUnsignedString(challengeEnd - challengeBegin);
+
+        LOGGER.info(String.format("challenge %s of \"%s\" is %s in %s ms", challenge.dateString(), challenge.shortName() , result, challengeDuration));
+
     }
 }
