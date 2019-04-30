@@ -43,7 +43,7 @@ public class DailyCodingChallengeApp {
     private void runChallenges(final Collection<CodingChallenge> challenges) {
 
         challenges.stream().forEach(this::runChallenge);
-        
+
     }
 
     private void runChallenge(final CodingChallenge challenge) {

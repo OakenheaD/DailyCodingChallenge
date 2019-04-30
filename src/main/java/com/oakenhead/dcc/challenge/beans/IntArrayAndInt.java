@@ -1,4 +1,4 @@
-package com.oakenhead.dcc.challenge.month04.day26;
+package com.oakenhead.dcc.challenge.beans;
 
 public class IntArrayAndInt {
 

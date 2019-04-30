@@ -2,13 +2,12 @@ package com.oakenhead.dcc.challenge.month04.day26;
 
 import com.oakenhead.dcc.challenge.AbstractCodingChallenge;
 import com.oakenhead.dcc.challenge.PairValue;
-import org.h2.util.IntArray;
+import com.oakenhead.dcc.challenge.beans.IntArrayAndInt;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.stream.IntStream;
 
 @Component
 public class AnyTwoNumbersAddUpToK extends AbstractCodingChallenge<Boolean, IntArrayAndInt> {
