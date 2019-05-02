@@ -2,11 +2,13 @@ package com.oakenhead.dcc.challenge.month04.day28;
 
 import com.oakenhead.dcc.challenge.AbstractCodingChallenge;
 import com.oakenhead.dcc.challenge.PairValue;
+import com.oakenhead.dcc.challenge.TripleValue;
 import com.oakenhead.dcc.challenge.beans.BinaryNode;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 
 @Component
 public class SerializeTree extends AbstractCodingChallenge<Boolean, PairValue<BinaryNode, String>> {
@@ -49,11 +51,13 @@ public class SerializeTree extends AbstractCodingChallenge<Boolean, PairValue<Bi
     }
 
     @Override
-    public List<PairValue<Boolean, PairValue<BinaryNode, String>>> getTestCases() {
+    public List<TripleValue<Boolean, Function<PairValue<BinaryNode, String>, Boolean>, PairValue<BinaryNode, String>>> getTestCases() {
+
+        final BinaryNode testNode = new BinaryNode("root", new BinaryNode("left", new BinaryNode("left.left")), new BinaryNode("right"));
+        final Function<PairValue<BinaryNode, String>, Boolean> testFunction = this::runChallengeCase;
 
         return Arrays.asList(
-                new PairValue<>(true,
-                        new PairValue<>(new BinaryNode("root", new BinaryNode("left", new BinaryNode("left.left")), new BinaryNode("right")), "left.left"))
+                new TripleValue<>(true, testFunction, new PairValue<>(testNode, "left.left"))
         );
 
     }

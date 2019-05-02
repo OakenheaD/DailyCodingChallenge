@@ -2,12 +2,14 @@ package com.oakenhead.dcc.challenge.month04.day26;
 
 import com.oakenhead.dcc.challenge.AbstractCodingChallenge;
 import com.oakenhead.dcc.challenge.PairValue;
+import com.oakenhead.dcc.challenge.TripleValue;
 import com.oakenhead.dcc.challenge.beans.IntArrayAndInt;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.function.Function;
 
 @Component
 public class AnyTwoNumbersAddUpToK extends AbstractCodingChallenge<Boolean, IntArrayAndInt> {
@@ -44,10 +46,12 @@ public class AnyTwoNumbersAddUpToK extends AbstractCodingChallenge<Boolean, IntA
     }
 
     @Override
-    public List<PairValue<Boolean, IntArrayAndInt>> getTestCases() {
+    public List<TripleValue<Boolean, Function<IntArrayAndInt, Boolean>, IntArrayAndInt>> getTestCases() {
+
+        final Function<IntArrayAndInt, Boolean> challengeFunction = this::runChallengeCase;
 
         return Arrays.asList(
-                new PairValue(true, new IntArrayAndInt(new int[] {10, 15, 3, 7}, 17))
+                new TripleValue(true, challengeFunction, new IntArrayAndInt(new int[] {10, 15, 3, 7}, 17))
         );
 
     }
