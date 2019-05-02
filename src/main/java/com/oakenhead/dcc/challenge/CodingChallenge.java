@@ -17,6 +17,6 @@ public interface CodingChallenge<R, T> {
 
     List<TripleValue<R, Function<T, R> ,T>> getTestCases();
 
-    TripleValue<Long, Long, Boolean> doRunTestsAndCheckIfPass();
+    QuadValue<Long, Long, Integer, Boolean> doRunTestsAndCheckIfPass();
 
 }

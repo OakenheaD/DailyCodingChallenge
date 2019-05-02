@@ -8,7 +8,7 @@ public abstract class AbstractCodingChallenge<R, T> implements CodingChallenge<R
 
 
     @Override
-    public TripleValue<Long, Long, Boolean> doRunTestsAndCheckIfPass() {
+    public QuadValue<Long, Long, Integer, Boolean> doRunTestsAndCheckIfPass() {
 
         final List<TripleValue<R, Function<T, R>, T>> testCases = getTestCases();
 
@@ -20,7 +20,7 @@ public abstract class AbstractCodingChallenge<R, T> implements CodingChallenge<R
 
         final long challengeEnd = System.nanoTime();
 
-        return new TripleValue<>(challengeBegin, challengeEnd, result);
+        return new QuadValue<>(challengeBegin, challengeEnd, testCases.size(), result);
 
     }
 
