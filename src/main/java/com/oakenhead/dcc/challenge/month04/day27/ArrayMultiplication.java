@@ -65,11 +65,44 @@ public class ArrayMultiplication extends AbstractCodingChallenge<List<Long>, Lis
         return result;
     }
 
+    public List<Long> runChallengeCaseNonDivision(final List<Long> input) {
+
+        final long[] forwardProducts = new long[input.size()];
+        final long[] reverseProducts = new long[input.size()];
+
+        final int maxUsableIndex = input.size() - 1;
+
+        forwardProducts[0] = input.get(0);
+        reverseProducts[maxUsableIndex] = input.get(maxUsableIndex);
+
+        for (int i = 1; i < input.size(); i++) {
+
+            forwardProducts[i] = input.get(i) * forwardProducts[i - 1];
+            reverseProducts[maxUsableIndex - i] = input.get(maxUsableIndex - i) * reverseProducts[maxUsableIndex - i + 1];
+
+        }
+
+        final List<Long> result = new ArrayList<>(input.size());
+
+        result.add(0, reverseProducts[1]);
+
+        for (int i = 1; i < maxUsableIndex; i++) {
+
+            result.add(i, forwardProducts[i - 1] * reverseProducts[i + 1]);
+
+        }
+
+        result.add(maxUsableIndex, forwardProducts[maxUsableIndex - 1]);
+
+        return result;
+    }
+
     @Override
     public List<TripleValue<List<Long>, Function<List<Long>, List<Long>>, List<Long>>> getTestCases() {
 
         //final Function<List<Long>, List<Long>> testFunction = this::runChallengeCase;
-        final Function<List<Long>, List<Long>> testFunction = this::runChallengeCaseNonStream;
+        //final Function<List<Long>, List<Long>> testFunction = this::runChallengeCaseNonStream;
+        final Function<List<Long>, List<Long>> testFunction = this::runChallengeCaseNonDivision;
 
         return Arrays.asList(
                 new TripleValue<>(Arrays.asList(120L, 60L, 40L, 30L, 24L), testFunction, Arrays.asList(1L, 2L, 3L, 4L, 5L)),
