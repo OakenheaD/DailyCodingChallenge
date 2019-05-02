@@ -48,13 +48,13 @@ public class DailyCodingChallengeApp {
 
     private void runChallenge(final CodingChallenge challenge) {
 
-        final long challengeBegin = System.currentTimeMillis();
+        final long challengeBegin = System.nanoTime();
         final String result = challenge.doRunTestsAndCheckIfPass() ? "success" : "fail";
-        final long challengeEnd = System.currentTimeMillis();
+        final long challengeEnd = System.nanoTime();
 
         final String challengeDuration = Long.toUnsignedString(challengeEnd - challengeBegin);
 
-        LOGGER.info(String.format("challenge %s of \"%s\" is %s in %s ms", challenge.dateString(), challenge.shortName() , result, challengeDuration));
+        LOGGER.info(String.format("challenge %s of \"%s\" is %s in %s ns", challenge.dateString(), challenge.shortName() , result, challengeDuration));
 
     }
 }

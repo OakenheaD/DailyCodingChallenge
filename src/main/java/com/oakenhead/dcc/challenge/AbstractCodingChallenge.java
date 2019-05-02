@@ -1,6 +1,7 @@
 package com.oakenhead.dcc.challenge;
 
 import java.util.List;
+import java.util.function.Function;
 
 public abstract class AbstractCodingChallenge<R, T> implements CodingChallenge<R, T> {
 
@@ -9,10 +10,10 @@ public abstract class AbstractCodingChallenge<R, T> implements CodingChallenge<R
     @Override
     public boolean doRunTestsAndCheckIfPass() {
 
-        final List<PairValue<R, T>> testCases = getTestCases();
+        final List<TripleValue<R, Function<T, R>, T>> testCases = getTestCases();
 
         return testCases.stream()
-                .mapToInt(testCase -> runChallengeCase(testCase.right).equals(testCase.left) ? 1 : 0)
+                .mapToInt(testCase -> testCase.middle.apply(testCase.right).equals(testCase.left) ? 1 : 0)
                 .sum() == testCases.size();
 
     }

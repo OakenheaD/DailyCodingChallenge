@@ -3,6 +3,7 @@ package com.oakenhead.dcc.challenge;
 import org.springframework.data.util.Pair;
 
 import java.util.List;
+import java.util.function.Function;
 
 public interface CodingChallenge<R, T> {
 
@@ -14,7 +15,7 @@ public interface CodingChallenge<R, T> {
 
     R runChallengeCase(final T input);
 
-    List<PairValue<R, T>> getTestCases();
+    List<TripleValue<R, Function<T, R> ,T>> getTestCases();
 
     boolean doRunTestsAndCheckIfPass();
 
