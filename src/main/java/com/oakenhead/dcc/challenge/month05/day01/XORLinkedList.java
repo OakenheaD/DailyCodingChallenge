@@ -112,7 +112,7 @@ public class XORLinkedList extends AbstractCodingChallenge<String, XORLinkedList
 
             XorListElement<T> currentElement = firstElement;
             XorListElement<T> previousElement = firstElement;
-            long nextElemPointer = firstElement.xorPreviousNextAddress; //since this is first element && (A xor 0 == A)
+            long nextElemPointer = 0 ^ firstElement.xorPreviousNextAddress; //since this is first element && (A xor 0 == A)
 
             for (int i = 1; i <= atIndex; i++) {
 
@@ -135,7 +135,7 @@ public class XORLinkedList extends AbstractCodingChallenge<String, XORLinkedList
 
         private synchronized void link(XorListElement<T> newElement, XorListElement<T> previous) {
 
-            final long newElementAddress = generateRandomAddress(this.size);
+            final long newElementAddress = getPointer(newElement);
             final long previousLastElemPtr = previous == null ? 0L : getPointer(previous);
 
             final long afterNewElementAddress = 0L;
@@ -160,7 +160,7 @@ public class XORLinkedList extends AbstractCodingChallenge<String, XORLinkedList
 
         private long generateRandomAddress(final int listSize) {
 
-            final long randomPart = ((long) (Math.random() * Integer.MAX_VALUE)) << 5;
+            final long randomPart = ((long) (Math.random() * (double)Integer.MAX_VALUE)) * 100000;
             return randomPart + listSize;
 
         }
