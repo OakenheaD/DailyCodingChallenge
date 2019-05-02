@@ -88,10 +88,10 @@ public class SerializeTree extends AbstractCodingChallenge<Boolean, PairValue<Bi
         final String rightValue = node.right == null ? "null" : serializeNodeRecursive(node.right);
 
         final String mainValueSanitized = node.value
-                .replaceAll(AMPERSAND, AMPERSAND_SAN)
-                .replaceAll(BRACE_UP, BRACE_UP_SAN)
-                .replaceAll(BRACE_DOWN, BRACE_DOWN_SAN)
-                .replaceAll(INNER_SEPARATOR, INNER_SEPARATOR_SAN);
+                .replaceAll("\\" + AMPERSAND, AMPERSAND_SAN)
+                .replaceAll("\\" + BRACE_UP, BRACE_UP_SAN)
+                .replaceAll("\\" + BRACE_DOWN, BRACE_DOWN_SAN)
+                .replaceAll("\\" + INNER_SEPARATOR, INNER_SEPARATOR_SAN);
 
         return BRACE_UP + mainValueSanitized + INNER_SEPARATOR + leftValue + INNER_SEPARATOR + rightValue + BRACE_DOWN;
 
@@ -107,10 +107,10 @@ public class SerializeTree extends AbstractCodingChallenge<Boolean, PairValue<Bi
         final String[] parts = splitToParts(withoutBraces);
 
         final String mainValueUnSanitized =  parts[0]
-                .replaceAll(BRACE_UP_SAN, BRACE_UP)
-                .replaceAll(BRACE_DOWN_SAN, BRACE_DOWN)
-                .replaceAll(INNER_SEPARATOR_SAN, INNER_SEPARATOR)
-                .replaceAll(AMPERSAND_SAN,AMPERSAND);
+                .replaceAll("\\" + BRACE_UP_SAN, BRACE_UP)
+                .replaceAll("\\" + BRACE_DOWN_SAN, BRACE_DOWN)
+                .replaceAll("\\" + INNER_SEPARATOR_SAN, INNER_SEPARATOR)
+                .replaceAll("\\" + AMPERSAND_SAN,AMPERSAND);
 
         final BinaryNode leftValue = deserializeNode(parts[1]);
         final BinaryNode rightValue = deserializeNode(parts[2]);
@@ -147,7 +147,13 @@ public class SerializeTree extends AbstractCodingChallenge<Boolean, PairValue<Bi
             if (currentChar == INNER_SEPARATOR.charAt(0) && level == 0) {
 
                 retParts[resultsIndex++] = input.substring(stringBeginIndex, i);
-                stringBeginIndex = i;
+                stringBeginIndex = i + 1;
+
+            }
+
+            if (i == input.length() - 1) {
+
+                retParts[resultsIndex++] = input.substring(stringBeginIndex, i + 1);
 
             }
 
