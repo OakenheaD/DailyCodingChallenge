@@ -8,13 +8,19 @@ public abstract class AbstractCodingChallenge<R, T> implements CodingChallenge<R
 
 
     @Override
-    public boolean doRunTestsAndCheckIfPass() {
+    public TripleValue<Long, Long, Boolean> doRunTestsAndCheckIfPass() {
 
         final List<TripleValue<R, Function<T, R>, T>> testCases = getTestCases();
 
-        return testCases.stream()
+        final long challengeBegin = System.nanoTime();
+
+        final Boolean result =  testCases.stream()
                 .mapToInt(testCase -> testCase.middle.apply(testCase.right).equals(testCase.left) ? 1 : 0)
                 .sum() == testCases.size();
+
+        final long challengeEnd = System.nanoTime();
+
+        return new TripleValue<>(challengeBegin, challengeEnd, result);
 
     }
 
