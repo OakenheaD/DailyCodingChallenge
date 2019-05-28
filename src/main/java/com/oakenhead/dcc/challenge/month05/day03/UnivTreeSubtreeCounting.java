@@ -68,10 +68,12 @@ public class UnivTreeSubtreeCounting extends AbstractCodingChallenge<Integer, Pu
 
     private int countNodeUnivSubtrees(final PureBinaryNode<Integer> node) {
         if (nodeHasAUnivSubtree(node)) {
-            return 1;
+            return 1
+                    + (node.leftChild != null ? countNodeUnivSubtrees(node.leftChild) : 0)
+                    + (node.rightChild != null ? countNodeUnivSubtrees(node.rightChild) : 0) ;
         }
 
-        return countNodeUnivSubtrees(node.rightChild) + countNodeUnivSubtrees(node.leftChild);
+        return countNodeUnivSubtrees(node.leftChild) + countNodeUnivSubtrees(node.rightChild);
     }
 
     private boolean nodeHasAUnivSubtree(final PureBinaryNode<Integer> node) {
