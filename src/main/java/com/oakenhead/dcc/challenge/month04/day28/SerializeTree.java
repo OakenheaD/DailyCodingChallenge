@@ -3,7 +3,7 @@ package com.oakenhead.dcc.challenge.month04.day28;
 import com.oakenhead.dcc.challenge.AbstractCodingChallenge;
 import com.oakenhead.dcc.challenge.PairValue;
 import com.oakenhead.dcc.challenge.TripleValue;
-import com.oakenhead.dcc.challenge.beans.BinaryNode;
+import com.oakenhead.dcc.challenge.beans.BinaryStringNode;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.function.Function;
 
 @Component
-public class SerializeTree extends AbstractCodingChallenge<Boolean, PairValue<BinaryNode, String>> {
+public class SerializeTree extends AbstractCodingChallenge<Boolean, PairValue<BinaryStringNode, String>> {
 
     @Override
     public String dateString() {
@@ -44,17 +44,17 @@ public class SerializeTree extends AbstractCodingChallenge<Boolean, PairValue<Bi
     }
 
     @Override
-    public Boolean runChallengeCase(final PairValue<BinaryNode, String> input) {
+    public Boolean runChallengeCase(final PairValue<BinaryStringNode, String> input) {
 
         return deserializeNode(serializeNode(input.left)).left.left.value.equalsIgnoreCase(input.right);
 
     }
 
     @Override
-    public List<TripleValue<Boolean, Function<PairValue<BinaryNode, String>, Boolean>, PairValue<BinaryNode, String>>> getTestCases() {
+    public List<TripleValue<Boolean, Function<PairValue<BinaryStringNode, String>, Boolean>, PairValue<BinaryStringNode, String>>> getTestCases() {
 
-        final BinaryNode testNode = new BinaryNode("root", new BinaryNode("left", new BinaryNode("left.left")), new BinaryNode("right"));
-        final Function<PairValue<BinaryNode, String>, Boolean> testFunction = this::runChallengeCase;
+        final BinaryStringNode testNode = new BinaryStringNode("root", new BinaryStringNode("left", new BinaryStringNode("left.left")), new BinaryStringNode("right"));
+        final Function<PairValue<BinaryStringNode, String>, Boolean> testFunction = this::runChallengeCase;
 
         return Arrays.asList(
                 new TripleValue<>(true, testFunction, new PairValue<>(testNode, "left.left"))
@@ -65,13 +65,13 @@ public class SerializeTree extends AbstractCodingChallenge<Boolean, PairValue<Bi
     //trivial case - use new Gson();
     //non trivial case:
 
-    private String serializeNode(final BinaryNode node) {
+    private String serializeNode(final BinaryStringNode node) {
 
         return serializeNodeRecursive(node);
 
     }
 
-    private BinaryNode deserializeNode(final String nodeStr) {
+    private BinaryStringNode deserializeNode(final String nodeStr) {
 
         return deserializeNodeRecursive(nodeStr);
 
@@ -86,7 +86,7 @@ public class SerializeTree extends AbstractCodingChallenge<Boolean, PairValue<Bi
     private static final String AMPERSAND = "&";
     private static final String AMPERSAND_SAN = "&ampersand_san;";
 
-    private String serializeNodeRecursive(final BinaryNode node) {
+    private String serializeNodeRecursive(final BinaryStringNode node) {
 
         final String leftValue = node.left == null ? "null" : serializeNodeRecursive(node.left);
         final String rightValue = node.right == null ? "null" : serializeNodeRecursive(node.right);
@@ -101,7 +101,7 @@ public class SerializeTree extends AbstractCodingChallenge<Boolean, PairValue<Bi
 
     }
 
-    private BinaryNode deserializeNodeRecursive(final String nodeStr) {
+    private BinaryStringNode deserializeNodeRecursive(final String nodeStr) {
 
         if ("null".equalsIgnoreCase(nodeStr)) {
             return null;
@@ -116,10 +116,10 @@ public class SerializeTree extends AbstractCodingChallenge<Boolean, PairValue<Bi
                 .replaceAll("\\" + INNER_SEPARATOR_SAN, INNER_SEPARATOR)
                 .replaceAll("\\" + AMPERSAND_SAN,AMPERSAND);
 
-        final BinaryNode leftValue = deserializeNode(parts[1]);
-        final BinaryNode rightValue = deserializeNode(parts[2]);
+        final BinaryStringNode leftValue = deserializeNode(parts[1]);
+        final BinaryStringNode rightValue = deserializeNode(parts[2]);
 
-        return new BinaryNode(mainValueUnSanitized, leftValue, rightValue);
+        return new BinaryStringNode(mainValueUnSanitized, leftValue, rightValue);
 
     }
 
