@@ -1,9 +1,14 @@
 package com.oakenhead.dcc.challenge;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.List;
 import java.util.function.Function;
 
 public abstract class AbstractCodingChallenge<R, T> implements CodingChallenge<R, T> {
+
+    protected static final Logger ABSTRACT_LOGGER = LoggerFactory.getLogger(AbstractCodingChallenge.class);
 
 
 
