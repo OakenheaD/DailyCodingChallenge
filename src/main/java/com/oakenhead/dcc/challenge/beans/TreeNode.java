@@ -13,7 +13,7 @@ public class TreeNode<T> {
         this.nodeValue = nodeValue;
     }
 
-    public void addChild(final TreeNode<T> newChild) {
+    public <D extends TreeNode<T>> void addChild(final D newChild) {
 
         children.add(newChild);
         newChild.previous = this;
