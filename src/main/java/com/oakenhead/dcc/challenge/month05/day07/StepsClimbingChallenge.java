@@ -63,7 +63,7 @@ public class StepsClimbingChallenge extends AbstractCodingChallenge<Integer, Int
 
     private int computeStairCase(final List<Integer> possibleSteps , final int totalSteps) {
 
-        final BiValuedTreeNode<Integer, Integer> rootNode = new BiValuedTreeNode<>(0, 5);
+        final BiValuedTreeNode<Integer, Integer> rootNode = new BiValuedTreeNode<>(0, totalSteps);
         populateTree(possibleSteps, rootNode);
         return countNode(rootNode);
     }
@@ -83,11 +83,22 @@ public class StepsClimbingChallenge extends AbstractCodingChallenge<Integer, Int
     private int countNode(final BiValuedTreeNode<Integer, Integer> startNode) {
         if (startNode.getChildren().size() == 0) {
 
-            return startNode.anotherValue == 0 ? 1 : 0;
+            final int count = startNode.anotherValue == 0 ? 1 : 0;
+            //ABSTRACT_LOGGER.info(" node chain " + printNode(startNode) + " count " + count);
+            return count;
 
         }
 
         return startNode.getChildren().stream().mapToInt(child -> countNode((BiValuedTreeNode<Integer, Integer>) child)).sum();
+    }
+
+    private String printNode(final BiValuedTreeNode<Integer, Integer> endNode) {
+
+        if (endNode.getPrevious() == null) {
+            return " " + endNode.getNodeValue();
+        }
+
+        return printNode((BiValuedTreeNode<Integer, Integer>) endNode.getPrevious()) + ", " + endNode.getNodeValue();
     }
 
 
