@@ -2,9 +2,7 @@ package com.oakenhead.dcc.challenge.month05.day04;
 
 import com.oakenhead.dcc.challenge.AbstractCodingChallenge;
 import com.oakenhead.dcc.challenge.TripleValue;
-import com.oakenhead.dcc.challenge.beans.MultivaluedTreeNode;
-import com.oakenhead.dcc.challenge.beans.PureBinaryNode;
-import com.oakenhead.dcc.challenge.beans.TreeNode;
+import com.oakenhead.dcc.challenge.beans.BiValuedTreeNode;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -41,7 +39,7 @@ public class NonAdjacentSumChallenge extends AbstractCodingChallenge<Integer, Li
     @Override
     public Integer runChallengeCase(final List<Integer> input) {
 
-        final MultivaluedTreeNode<Integer, List<Integer>> startNode = new MultivaluedTreeNode<>(0, input);
+        final BiValuedTreeNode<Integer, List<Integer>> startNode = new BiValuedTreeNode<>(0, input);
 
         populateNode(startNode);
         final int answer = largestSumOfSubtree(startNode);
@@ -50,7 +48,7 @@ public class NonAdjacentSumChallenge extends AbstractCodingChallenge<Integer, Li
 
     }
 
-    private void populateNode(final MultivaluedTreeNode<Integer, List<Integer>> startNode) {
+    private void populateNode(final BiValuedTreeNode<Integer, List<Integer>> startNode) {
 
         final List<Integer> allowedForwardValues = startNode.anotherValue;
 
@@ -61,7 +59,7 @@ public class NonAdjacentSumChallenge extends AbstractCodingChallenge<Integer, Li
             final boolean hasNextAllowed = allowedForwardValues.size() >= 3;
             final List<Integer> nextForward = hasNextAllowed ? allowedForwardValues.subList(2, allowedForwardValues.size()) : new ArrayList<>();
 
-            final MultivaluedTreeNode<Integer, List<Integer>> newChild = new MultivaluedTreeNode<>(allowedForwardValues.get(0), nextForward);
+            final BiValuedTreeNode<Integer, List<Integer>> newChild = new BiValuedTreeNode<>(allowedForwardValues.get(0), nextForward);
             startNode.addChild(newChild);
             populateNode(newChild);
 
@@ -71,19 +69,19 @@ public class NonAdjacentSumChallenge extends AbstractCodingChallenge<Integer, Li
             final boolean hasNextAllowed = allowedForwardValues.size() >= 4;
             final List<Integer> nextForward = hasNextAllowed ? allowedForwardValues.subList(3, allowedForwardValues.size()) : new ArrayList<>();
 
-            final MultivaluedTreeNode<Integer, List<Integer>> newChild = new MultivaluedTreeNode<>(allowedForwardValues.get(1), nextForward);
+            final BiValuedTreeNode<Integer, List<Integer>> newChild = new BiValuedTreeNode<>(allowedForwardValues.get(1), nextForward);
             startNode.addChild(newChild);
             populateNode(newChild);
 
         }
     }
 
-    private int largestSumOfSubtree(final MultivaluedTreeNode<Integer, List<Integer>> startNode) {
+    private int largestSumOfSubtree(final BiValuedTreeNode<Integer, List<Integer>> startNode) {
 
         if (startNode.getChildren().size() > 0) {
 
             return startNode.getNodeValue() + startNode.getChildren().stream()
-                    .mapToInt(child -> largestSumOfSubtree((MultivaluedTreeNode<Integer, List<Integer>>) child))
+                    .mapToInt(child -> largestSumOfSubtree((BiValuedTreeNode<Integer, List<Integer>>) child))
                     .reduce((a, b) -> a > b ? a : b).getAsInt();
 
         }

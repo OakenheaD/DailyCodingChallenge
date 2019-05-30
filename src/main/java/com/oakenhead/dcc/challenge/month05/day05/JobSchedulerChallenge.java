@@ -51,7 +51,7 @@ public class JobSchedulerChallenge extends AbstractCodingChallenge<Boolean, Pair
                 final Long end = System.nanoTime();
                 final Long itTookNs = (end - begin);
 
-                return itTookNs / 1000;
+                return itTookNs / 1000000;
 
             } catch (final Exception e) {
                 //ignore
