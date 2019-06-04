@@ -11,7 +11,8 @@ public class FrugalRollingQueue<T> {
     private T lastElement = null;
     private final List<T[]> data; //array list is quite efficient in Java
     private final int perLayer = 10;  //arbitrary value
-    private final AtomicInteger size = new AtomicInteger(0);
+    private final AtomicInteger fetchingSize = new AtomicInteger(0);
+    private final AtomicInteger insertingSize = new AtomicInteger(0);
 
     public FrugalRollingQueue() {
         data = new ArrayList<>();
@@ -31,7 +32,7 @@ public class FrugalRollingQueue<T> {
 
     public void validateIndex(final int indexFromLast) {
 
-        if (lastElement == null || indexFromLast >= size.get()) {
+        if (lastElement == null || indexFromLast >= fetchingSize.get()) {
             throw new IndexOutOfBoundsException();
         }
 
@@ -41,7 +42,7 @@ public class FrugalRollingQueue<T> {
 
         validateIndex(indexFromLast);
 
-        final int dataIndex = size.get() - indexFromLast - 1;
+        final int dataIndex = fetchingSize.get() - indexFromLast - 1;
         final PairValue<Integer, Integer> expectedIndex = computeIndexLayering(dataIndex);
 
         return data.get(expectedIndex.left)[expectedIndex.right];
@@ -51,7 +52,7 @@ public class FrugalRollingQueue<T> {
     @SuppressWarnings("unchecked")
     private synchronized void insert(final T value) {
 
-        final PairValue<Integer, Integer> insertionIndex = computeIndexLayering(size.get());
+        final PairValue<Integer, Integer> insertionIndex = computeIndexLayering(insertingSize.incrementAndGet());
 
         final int topLayerIndex = insertionIndex.left;
         final int dataArrayIndex = insertionIndex.right;
@@ -67,7 +68,7 @@ public class FrugalRollingQueue<T> {
 
         dataLayer[dataArrayIndex] = value;
 
-        size.incrementAndGet();  //we may miss a value, but we'll never run into NPEs and mis indexing.
+        fetchingSize.incrementAndGet();  //we may miss a value, but we'll never run into NPEs and mis indexing.
 
     }
 
