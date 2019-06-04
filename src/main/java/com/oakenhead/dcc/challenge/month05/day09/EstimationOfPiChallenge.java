@@ -68,6 +68,25 @@ public class EstimationOfPiChallenge extends AbstractCodingChallenge<Boolean, In
         return Math.abs(piEstimation - Math.PI) < 0.0005;
     }
 
+    public Boolean runMemOptimizedChallengeCase(final Integer input) {
+
+        final Random random = new Random();
+
+        long totalPoints = 0;
+        long pointsInsideCircle = 0;
+
+        do {
+
+            final double x = (random.nextBoolean() ? -1  : 1 ) * random.nextDouble();
+            final double y = (random.nextBoolean() ? -1  : 1 ) * random.nextDouble();
+            totalPoints++;
+            pointsInsideCircle += isPointInUnitCircle(x, y) ? 1 : 0;
+        } while (totalPoints < 50_000_000);
+
+        final double piEstimation = (((double) pointsInsideCircle * 4) / ((double) totalPoints));
+        return Math.abs(piEstimation - Math.PI) < 0.0005;
+    }
+
     private boolean isPointInUnitCircle(final double x, final double y) {
         return (x*x + y*y) < 1;
     }

@@ -28,3 +28,10 @@ hs_err_pid*
 /.gradle/buildOutputCleanup
 /daily-coding-challenge.ipr
 /daily-coding-challenge.iws
+/.idea/sonarlint/issuestore/index.pb
+/DailyCodingChallenge.ipr
+/DailyCodingChallenge.iws
+/out/production/resources/application.properties
+/out/production/resources/db/changelog/000_yury-createdb.sql
+/out/production/resources/db/db.changelog-master.xml
+/out/production/resources/logback.xml
