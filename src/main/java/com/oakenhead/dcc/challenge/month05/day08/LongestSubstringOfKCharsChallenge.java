@@ -51,10 +51,10 @@ public class LongestSubstringOfKCharsChallenge extends AbstractCodingChallenge<S
                 .orElse(input.left);
 
     }
-    
+
     private List<String> allTrailingSubstrings(final String input) {
 
-        return IntStream.range(0, input.length() - 1).boxed()
+        return IntStream.range(1, input.length() + 1).boxed()
                 .map(i -> input.substring(0, i))
                 .collect(Collectors.toList());
 
@@ -80,7 +80,8 @@ public class LongestSubstringOfKCharsChallenge extends AbstractCodingChallenge<S
         final Function<PairValue<String, Integer>, String> testFunction = this::runChallengeCase;
 
         return Arrays.asList(
-                new TripleValue<>("bcb", testFunction, new PairValue<>("abcba", 2))
+                new TripleValue<>("bcb", testFunction, new PairValue<>("abcba", 2)),
+                new TripleValue<>("czzzzzzzzzzzzzc", testFunction, new PairValue<>("abcabcabczzzzzzzzzzzzzcabcabcabcabc", 2))
         );
     }
 }
