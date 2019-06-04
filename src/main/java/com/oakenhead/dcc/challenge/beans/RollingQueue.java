@@ -6,7 +6,15 @@ import java.util.List;
 public class RollingQueue<T> {
 
     private T lastElement = null;
-    private List<T> data = new ArrayList<>(); //array list is quite efficient in Java
+    private final List<T> data; //array list is quite efficient in Java
+
+    public RollingQueue() {
+        data = new ArrayList<>();
+    }
+
+    public RollingQueue(final int expectedSize) {
+        data = new ArrayList<>(expectedSize);
+    }
 
     public T push(final T newTopValue) {
 

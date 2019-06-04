@@ -3,6 +3,7 @@ package com.oakenhead.dcc;
 import com.oakenhead.dcc.challenge.CodingChallenge;
 import com.oakenhead.dcc.challenge.QuadValue;
 import com.oakenhead.dcc.challenge.TripleValue;
+import com.oakenhead.dcc.challenge.beans.FrugalRollingQueue;
 import com.oakenhead.dcc.challenge.beans.RollingQueue;
 import com.oakenhead.dcc.challenge.month04.day26.AnyTwoNumbersAddUpToK;
 import org.slf4j.Logger;
@@ -55,7 +56,7 @@ public class DailyCodingChallengeApp {
 
         final int challengesToRun = 10;
 
-        final RollingQueue<CodingChallenge> challengeRollingQueue = new RollingQueue<>();
+        final FrugalRollingQueue<CodingChallenge> challengeRollingQueue = new FrugalRollingQueue<>();
         challenges.stream().forEach(challengeRollingQueue::push);
         IntStream.range(0, challengesToRun)
                 .map(i -> challengesToRun - i - 1)
