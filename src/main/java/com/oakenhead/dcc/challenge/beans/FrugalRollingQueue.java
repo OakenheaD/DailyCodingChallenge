@@ -21,12 +21,10 @@ public class FrugalRollingQueue<T> {
         data = new ArrayList<>(expectedSize / perLayer + 1);
     }
 
-    public synchronized T push(final T newTopValue) {
+    public T push(final T newTopValue) {
 
         lastElement = newTopValue;
-        final PairValue<Integer, Integer> insertionIndex = computeIndexLayering(size.get());
-        insert(insertionIndex, newTopValue);
-        size.incrementAndGet();
+        insert(newTopValue);
         return newTopValue;
 
     }
@@ -51,10 +49,12 @@ public class FrugalRollingQueue<T> {
     }
 
     @SuppressWarnings("unchecked")
-    private void insert(final PairValue<Integer, Integer> expectedIndex, final T value) {
+    private synchronized void insert(final T value) {
 
-        final int topLayerIndex = expectedIndex.left;
-        final int dataArrayIndex = expectedIndex.right;
+        final PairValue<Integer, Integer> insertionIndex = computeIndexLayering(size.get());
+
+        final int topLayerIndex = insertionIndex.left;
+        final int dataArrayIndex = insertionIndex.right;
 
         final T[] dataLayer;
 
@@ -66,6 +66,8 @@ public class FrugalRollingQueue<T> {
         }
 
         dataLayer[dataArrayIndex] = value;
+
+        size.incrementAndGet();  //we may miss a value, but we'll never run into NPEs and mis indexing.
 
     }
 
