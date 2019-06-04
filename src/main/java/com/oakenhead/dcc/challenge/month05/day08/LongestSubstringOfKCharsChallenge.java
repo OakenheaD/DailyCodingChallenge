@@ -6,9 +6,14 @@ import com.oakenhead.dcc.challenge.TripleValue;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Component
 public class LongestSubstringOfKCharsChallenge extends AbstractCodingChallenge<String, PairValue<String, Integer>> {
@@ -36,12 +41,41 @@ public class LongestSubstringOfKCharsChallenge extends AbstractCodingChallenge<S
 
     @Override
     public String runChallengeCase(final PairValue<String, Integer> input) {
-        return null;
+
+        return
+                allTrailingSubstrings(input.left).stream()
+                .map(substring -> allRearSubstrings(substring))
+                .collect(ArrayList<String>::new, List::addAll, List::addAll).stream()
+                .filter(substring -> distinctCharsInString(substring) <= input.right)
+                .max(Comparator.comparing(String::length))
+                .orElse(input.left);
+
+    }
+    
+    private List<String> allTrailingSubstrings(final String input) {
+
+        return IntStream.range(0, input.length() - 1).boxed()
+                .map(i -> input.substring(0, i))
+                .collect(Collectors.toList());
+
+    }
+
+    private List<String> allRearSubstrings(final String input) {
+
+        return IntStream.range(0, input.length()).boxed()
+                .map(i -> input.substring(i, input.length()))
+                .collect(Collectors.toList());
+
+    }
+
+    private int distinctCharsInString(final String input) {
+
+        return input.chars().boxed().collect(HashSet::new, HashSet::add, HashSet::addAll).size();
+
     }
 
     @Override
     public List<TripleValue<String, Function<PairValue<String, Integer>, String>, PairValue<String, Integer>>> getTestCases() {
-
 
         final Function<PairValue<String, Integer>, String> testFunction = this::runChallengeCase;
 
