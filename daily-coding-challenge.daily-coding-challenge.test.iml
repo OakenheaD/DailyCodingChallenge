@@ -40,7 +40,7 @@
     <orderEntry type="library" name="Gradle: org.apache.cxf:cxf-rt-rs-mp-client:3.3.0" level="project" />
     <orderEntry type="library" name="Gradle: org.eclipse.microprofile.rest.client:microprofile-rest-client-api:1.2.1" level="project" />
     <orderEntry type="library" name="Gradle: org.eclipse.microprofile.rest.client:microprofile-rest-client-spec:pom:1.2.1" level="project" />
-    <orderEntry type="library" name="Gradle: junit:junit:4.13-beta-2" level="project" />
+    <orderEntry type="library" name="Gradle: junit:junit:4.13-beta-3" level="project" />
     <orderEntry type="library" name="Gradle: com.squareup.okio:okio:1.6.0" level="project" />
     <orderEntry type="library" name="Gradle: com.google.protobuf:protobuf-java:3.6.1" level="project" />
     <orderEntry type="library" name="Gradle: net.minidev:accessors-smart:1.2" level="project" />
