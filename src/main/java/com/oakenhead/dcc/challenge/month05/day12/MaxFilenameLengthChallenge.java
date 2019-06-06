@@ -4,6 +4,7 @@ import com.oakenhead.dcc.challenge.AbstractCodingChallenge;
 import com.oakenhead.dcc.challenge.TripleValue;
 import com.oakenhead.dcc.challenge.beans.BiValuedTreeNode;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -67,7 +68,7 @@ public class MaxFilenameLengthChallenge extends AbstractCodingChallenge<Integer,
     @Override
     public Integer runChallengeCase(final String input) {
 
-        final BiValuedTreeNode<String, String> rootNode = new BiValuedTreeNode<>("\n" + input, "");
+        final BiValuedTreeNode<String, String> rootNode = new BiValuedTreeNode<>("", input);
 
         populateNode(rootNode);
 
@@ -76,16 +77,16 @@ public class MaxFilenameLengthChallenge extends AbstractCodingChallenge<Integer,
 
     private String join(final List<String> strings) {
 
-        return strings.stream().collect(Collectors.joining());
+        return strings.stream().collect(Collectors.joining("\n"));
     }
 
     private int getObjectLevel(final String object) {
 
-        if (!object.startsWith("\n")) {
+        if (object.equals("")) {
             return 0;
         }
 
-        final boolean isTopLevel = !object.startsWith("\n\t");
+        final boolean isTopLevel = !object.startsWith("\t");
 
         if (isTopLevel) {
             return 1;
@@ -96,8 +97,8 @@ public class MaxFilenameLengthChallenge extends AbstractCodingChallenge<Integer,
 
     private void populateNode(final BiValuedTreeNode<String, String> startNode) {
 
-        final String[] levels = startNode.getNodeValue().split("\\n");
-        final int nodeLevel = getObjectLevel(startNode.anotherValue);
+        final String[] levels = startNode.anotherValue.split("\n");
+        final int nodeLevel = getObjectLevel(startNode.getNodeValue());
 
         String currentChildObject = "";
         List<String> currentChildContent = new ArrayList<>();
@@ -106,17 +107,21 @@ public class MaxFilenameLengthChallenge extends AbstractCodingChallenge<Integer,
 
             final String currentObject = levels[i];
             final int currentObjectLevel = getObjectLevel(currentObject);
-            final boolean isDirectChild = (nodeLevel - currentObjectLevel) == 1;
+            final boolean isDirectChild = (currentObjectLevel - nodeLevel) == 1;
 
             if (isDirectChild) {
-                if (currentChildContent.size() > 0) {
+                if (!StringUtils.isEmpty(currentChildObject)) {
                     startNode.addChild(new BiValuedTreeNode<>(currentChildObject, join(currentChildContent)));
                 }
                 currentChildContent = new ArrayList<>();
                 currentChildObject = currentObject;
-            } else {
+            } else if (currentObjectLevel > nodeLevel) {
                 currentChildContent.add(currentObject);
             }
+        }
+
+        if (!StringUtils.isEmpty(currentChildObject)) {
+            startNode.addChild(new BiValuedTreeNode<>(currentChildObject, join(currentChildContent)));
         }
 
         startNode.getChildren().forEach(child -> populateNode((BiValuedTreeNode<String, String>) child));
