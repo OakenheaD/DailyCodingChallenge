@@ -3,11 +3,19 @@ package com.oakenhead.dcc.challenge.month05.day12;
 import com.oakenhead.dcc.challenge.AbstractCodingChallenge;
 import com.oakenhead.dcc.challenge.PairValue;
 import com.oakenhead.dcc.challenge.TripleValue;
+import com.oakenhead.dcc.challenge.beans.BiValuedTreeNode;
+import com.oakenhead.dcc.challenge.beans.TreeNode;
+import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.StringJoiner;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
+
+@Service
 public class MaxFilenameLengthChallenge extends AbstractCodingChallenge<Integer, String> {
     @Override
     public String dateString() {
@@ -61,7 +69,60 @@ public class MaxFilenameLengthChallenge extends AbstractCodingChallenge<Integer,
 
     @Override
     public Integer runChallengeCase(final String input) {
-        return null;
+
+        final BiValuedTreeNode<String, String> rootNode = new BiValuedTreeNode<>("\\n" + input, "");
+
+        populateNode(rootNode);
+
+        return 10;
+    }
+
+    private String join(final List<String> strings) {
+
+        return strings.stream().collect(Collectors.joining());
+    }
+
+    private int getObjectLevel(final String object) {
+
+        if (!object.startsWith("\\n")) {
+            return 0;
+        }
+
+        final boolean isTopLevel = !object.startsWith("\\n\\t");
+
+        if (isTopLevel) {
+            return 1;
+        }
+
+        return (object.lastIndexOf("\\t") + "\\t".length()) / "\\t".length();
+    }
+
+    private void populateNode(final BiValuedTreeNode<String, String> startNode) {
+
+        final String[] levels = startNode.getNodeValue().split("\\n");
+        final int nodeLevel = getObjectLevel(startNode.anotherValue);
+
+        String currentChildObject = "";
+        List<String> currentChildContent = new ArrayList<>();
+
+        for (int i = 0; i < levels.length; i++) {
+
+            final String currentObject = levels[i];
+            final int currentObjectLevel = getObjectLevel(currentObject);
+            final boolean isDirectChild = (nodeLevel - currentObjectLevel) == 1;
+
+            if (isDirectChild) {
+                if (currentChildContent.size() > 0) {
+                    startNode.addChild(new BiValuedTreeNode<>(currentChildObject, join(currentChildContent)));
+                }
+                currentChildContent = new ArrayList<>();
+                currentChildObject = currentObject;
+            } else {
+                currentChildContent.add(currentObject);
+            }
+        }
+
+        startNode.getChildren().forEach(child -> populateNode((BiValuedTreeNode<String, String>) child));
     }
 
     @Override
