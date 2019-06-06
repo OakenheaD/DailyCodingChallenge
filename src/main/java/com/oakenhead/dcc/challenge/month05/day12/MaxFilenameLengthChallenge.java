@@ -133,7 +133,7 @@ public class MaxFilenameLengthChallenge extends AbstractCodingChallenge<Integer,
 
         if (isNodeFile((BiValuedTreeNode<String, String>) startNode)) {
 
-            return /*getObjectLevel(startNode.getNodeValue())  + */startNode.getNodeValue().length();
+            return startNode.getNodeValue().replaceAll("\\t+", "/").length();
         }
 
         if (isNodeEmptyDir((BiValuedTreeNode<String, String>) startNode)) {
@@ -141,7 +141,11 @@ public class MaxFilenameLengthChallenge extends AbstractCodingChallenge<Integer,
             return -100500;
         }
 
-        return startNode.getChildren().stream().mapToInt(node -> computeNode((BiValuedTreeNode<String, String>) node)).max().orElse(-1);
+        final int maxChildWeight = startNode.getChildren().stream().mapToInt(node -> computeNode((BiValuedTreeNode<String, String>) node)).max().orElse(-1);
+
+        return maxChildWeight > 0 ?
+                startNode.getNodeValue().replaceAll("\\t+", "/").length() + maxChildWeight :
+                -1;
 
     }
 
@@ -158,7 +162,8 @@ public class MaxFilenameLengthChallenge extends AbstractCodingChallenge<Integer,
         final Function<String, Integer> testFunction = this::runChallengeCase;
 
         return Arrays.asList(
-                new TripleValue<>( 32, testFunction, "dir\n\tsubdir1\n\t\tfile1.ext\n\t\tsubsubdir1\n\tsubdir2\n\t\tsubsubdir2\n\t\t\tfile2.ext")
+                new TripleValue<>( 32, testFunction, "dir\n\tsubdir1\n\t\tfile1.ext\n\t\tsubsubdir1\n\tsubdir2\n\t\tsubsubdir2\n\t\t\tfile2.ext"),
+                new TripleValue<>( 32, testFunction, "dir\n\tsubdir1\n\t\tfile1.ext\n\t\tsubsubdir1\n\tsubdir2\n\t\tsubsubdir2\n\t\t\tfile2.ext\ndir2\n\tsubdir1\n\t\tfile1.ext\n\t\tsubsubdir1\n\tsubdir2\n\t\tsubsubdir2\n\t\t\tfl2.ext")
         );
     }
 }
