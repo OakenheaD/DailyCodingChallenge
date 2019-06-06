@@ -3,6 +3,7 @@ package com.oakenhead.dcc.challenge.month05.day12;
 import com.oakenhead.dcc.challenge.AbstractCodingChallenge;
 import com.oakenhead.dcc.challenge.TripleValue;
 import com.oakenhead.dcc.challenge.beans.BiValuedTreeNode;
+import com.oakenhead.dcc.challenge.beans.TreeNode;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -72,7 +73,7 @@ public class MaxFilenameLengthChallenge extends AbstractCodingChallenge<Integer,
 
         populateNode(rootNode);
 
-        return 10;
+        return computeNode(rootNode);
     }
 
     private String join(final List<String> strings) {
@@ -92,7 +93,7 @@ public class MaxFilenameLengthChallenge extends AbstractCodingChallenge<Integer,
             return 1;
         }
 
-        return (object.lastIndexOf("\t") + "\t".length()) / "\t".length();
+        return (object.lastIndexOf("\t") + "\t".length()) / "\t".length() + 1;
     }
 
     private void populateNode(final BiValuedTreeNode<String, String> startNode) {
@@ -107,7 +108,8 @@ public class MaxFilenameLengthChallenge extends AbstractCodingChallenge<Integer,
 
             final String currentObject = levels[i];
             final int currentObjectLevel = getObjectLevel(currentObject);
-            final boolean isDirectChild = (currentObjectLevel - nodeLevel) == 1;
+            final boolean isAChild = (currentObjectLevel - nodeLevel) > 0;
+            final boolean isDirectChild = isAChild && (currentObjectLevel - nodeLevel) == 1;
 
             if (isDirectChild) {
                 if (!StringUtils.isEmpty(currentChildObject)) {
@@ -125,6 +127,30 @@ public class MaxFilenameLengthChallenge extends AbstractCodingChallenge<Integer,
         }
 
         startNode.getChildren().forEach(child -> populateNode((BiValuedTreeNode<String, String>) child));
+    }
+
+    private int computeNode(final TreeNode<String> startNode) {
+
+        if (isNodeFile((BiValuedTreeNode<String, String>) startNode)) {
+
+            return /*getObjectLevel(startNode.getNodeValue())  + */startNode.getNodeValue().length();
+        }
+
+        if (isNodeEmptyDir((BiValuedTreeNode<String, String>) startNode)) {
+
+            return -100500;
+        }
+
+        return startNode.getChildren().stream().mapToInt(node -> computeNode((BiValuedTreeNode<String, String>) node)).max().orElse(-1);
+
+    }
+
+    private boolean isNodeFile(final BiValuedTreeNode<String, String> startNode) {
+        return startNode.getChildren().size() == 0 && startNode.getNodeValue().contains(".");
+    }
+
+    private boolean isNodeEmptyDir(final BiValuedTreeNode<String, String> startNode) {
+        return startNode.getChildren().size() == 0 && !startNode.getNodeValue().contains(".");
     }
 
     @Override
