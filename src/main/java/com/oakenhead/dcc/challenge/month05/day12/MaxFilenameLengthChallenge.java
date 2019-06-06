@@ -1,16 +1,13 @@
 package com.oakenhead.dcc.challenge.month05.day12;
 
 import com.oakenhead.dcc.challenge.AbstractCodingChallenge;
-import com.oakenhead.dcc.challenge.PairValue;
 import com.oakenhead.dcc.challenge.TripleValue;
 import com.oakenhead.dcc.challenge.beans.BiValuedTreeNode;
-import com.oakenhead.dcc.challenge.beans.TreeNode;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.StringJoiner;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -70,7 +67,7 @@ public class MaxFilenameLengthChallenge extends AbstractCodingChallenge<Integer,
     @Override
     public Integer runChallengeCase(final String input) {
 
-        final BiValuedTreeNode<String, String> rootNode = new BiValuedTreeNode<>("\\n" + input, "");
+        final BiValuedTreeNode<String, String> rootNode = new BiValuedTreeNode<>("\n" + input, "");
 
         populateNode(rootNode);
 
@@ -84,17 +81,17 @@ public class MaxFilenameLengthChallenge extends AbstractCodingChallenge<Integer,
 
     private int getObjectLevel(final String object) {
 
-        if (!object.startsWith("\\n")) {
+        if (!object.startsWith("\n")) {
             return 0;
         }
 
-        final boolean isTopLevel = !object.startsWith("\\n\\t");
+        final boolean isTopLevel = !object.startsWith("\n\t");
 
         if (isTopLevel) {
             return 1;
         }
 
-        return (object.lastIndexOf("\\t") + "\\t".length()) / "\\t".length();
+        return (object.lastIndexOf("\t") + "\t".length()) / "\t".length();
     }
 
     private void populateNode(final BiValuedTreeNode<String, String> startNode) {

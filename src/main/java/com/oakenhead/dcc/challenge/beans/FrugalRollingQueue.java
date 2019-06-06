@@ -52,7 +52,7 @@ public class FrugalRollingQueue<T> {
     @SuppressWarnings("unchecked")
     private synchronized void insert(final T value) {
 
-        final PairValue<Integer, Integer> insertionIndex = computeIndexLayering(insertingSize.incrementAndGet());
+        final PairValue<Integer, Integer> insertionIndex = computeIndexLayering(insertingSize.getAndIncrement());
 
         final int topLayerIndex = insertionIndex.left;
         final int dataArrayIndex = insertionIndex.right;
