@@ -6,8 +6,11 @@ import com.oakenhead.dcc.challenge.TripleValue;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
+import java.util.TreeSet;
 import java.util.function.Function;
+import java.util.stream.IntStream;
 
 @Service
 public class MaxValueInSubArrayChallenge extends AbstractCodingChallenge<Integer[] , PairValue<Integer[], Integer>> {
@@ -63,14 +66,51 @@ public class MaxValueInSubArrayChallenge extends AbstractCodingChallenge<Integer
         return result;
     }
 
+    public Integer[] runChallengeCaseDequeue(final PairValue<Integer[], Integer> input) {
+
+        final int subarrayLength = input.right;
+        final Integer[] data = input.left;
+        final Integer[] result = new Integer[data.length - subarrayLength + 1];
+
+        //right: value, left: place;
+        final TreeSet<PairValue<Integer, Integer>> deque = new TreeSet<>(Comparator
+                .comparing(value -> ((PairValue<Integer, Integer>) value).right)
+                .thenComparing(value -> ((PairValue<Integer, Integer>) value).left));
+
+        final PairValue<Integer, Integer>[] dataPairs = new PairValue[data.length];
+
+        for (int i = 0; i < data.length; i++) {
+            dataPairs[i] = new PairValue<>(data[i], i);
+        }
+
+        for (int i = 0; i < subarrayLength; i++) {
+
+            deque.add(dataPairs[i]);
+        }
+
+        //o(n)
+        for (int i = subarrayLength, j = 0; i < data.length; i++, j++) {
+
+            result[j] = deque.last().right;
+            deque.remove(dataPairs[i]);
+        }
+
+        return result;
+
+    }
+
     @Override
     public List<TripleValue<Integer[], Function<PairValue<Integer[], Integer>, Integer[]>, PairValue<Integer[], Integer>>> getTestCases() {
+
         final Function<PairValue<Integer[], Integer>, Integer[]> testFunction = this::runChallengeCase;
+        final Function<PairValue<Integer[], Integer>, Integer[]> dequeFunction = this::runChallengeCaseDequeue;
+
         final Integer[] testInput = new Integer[] {10, 5, 2, 7, 8, 7};
         final Integer[] testResult = new Integer[] {10, 7, 8, 8};
 
         return Arrays.asList(
-                new TripleValue<>(testResult, testFunction, new PairValue<>(testInput, 3))
+                new TripleValue<>(testResult, testFunction, new PairValue<>(testInput, 3)),
+                new TripleValue<>(testResult, dequeFunction, new PairValue<>(testInput, 3))
         );
     }
 }
