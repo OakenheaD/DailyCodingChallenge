@@ -3,11 +3,13 @@ package com.oakenhead.dcc.challenge.month05.day14;
 import com.oakenhead.dcc.challenge.AbstractCodingChallenge;
 import com.oakenhead.dcc.challenge.PairValue;
 import com.oakenhead.dcc.challenge.TripleValue;
+import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
+@Service
 public class RowOfNByKMinCostChallenge extends AbstractCodingChallenge<Integer, Integer[][]> {
 
 
@@ -57,8 +59,14 @@ public class RowOfNByKMinCostChallenge extends AbstractCodingChallenge<Integer, 
 
                 final int costOfThisHouseAndColor = input[iHouses][iColours];
 
+                if (minCostInPrevRow.right == iColours) {
 
-                weightsToPoint[iHouses][iColours] =
+                    weightsToPoint[iHouses][iColours] = costOfThisHouseAndColor + minCostInPrevRowSecond.left;
+                } else {
+
+                    weightsToPoint[iHouses][iColours] = costOfThisHouseAndColor + minCostInPrevRow.left;
+                }
+
             }
         }
 
@@ -69,7 +77,7 @@ public class RowOfNByKMinCostChallenge extends AbstractCodingChallenge<Integer, 
 
     private PairValue<Integer, Integer> findMinimumValue(final Integer[] column, int indexToSkip) {
 
-        int currentMinimum = Integer.MIN_VALUE;
+        int currentMinimum = Integer.MAX_VALUE;
         int currentMinIndex = -1;
 
         for (int i = 0; i < column.length; i++) {
