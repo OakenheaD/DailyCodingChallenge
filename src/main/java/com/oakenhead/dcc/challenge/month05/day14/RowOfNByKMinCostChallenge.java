@@ -36,7 +36,56 @@ public class RowOfNByKMinCostChallenge extends AbstractCodingChallenge<Integer, 
 
     @Override
     public Integer runChallengeCase(final Integer[][] input) {
-        return null;
+        final int houses = input.length;
+        final int colours = input[0].length;
+
+        final Integer[][] weightsToPoint = new Integer[houses][colours];
+        PairValue<Integer, Integer> minCostInPrevRow = new PairValue<>(0, -1);
+        PairValue<Integer, Integer> minCostInPrevRowSecond = new PairValue<>(0, -1);
+
+        for (int iHouses = 0; iHouses < houses; iHouses++) {
+
+            minCostInPrevRow = iHouses == 0 ?
+                    new PairValue<>(0, -1) :
+                    findMinimumValue(weightsToPoint[iHouses - 1], minCostInPrevRow.right);
+
+            minCostInPrevRowSecond = iHouses == 0 ?
+                    new PairValue<>(0, -1) :
+                    findMinimumValue(weightsToPoint[iHouses - 1], minCostInPrevRow.right);
+
+            for (int iColours = 0; iColours < colours; iColours++) {
+
+                final int costOfThisHouseAndColor = input[iHouses][iColours];
+
+
+                weightsToPoint[iHouses][iColours] =
+            }
+        }
+
+        PairValue<Integer, Integer> minWeightFinal = findMinimumValue(weightsToPoint[houses - 1], -1);
+
+        return minWeightFinal.left;
+    }
+
+    private PairValue<Integer, Integer> findMinimumValue(final Integer[] column, int indexToSkip) {
+
+        int currentMinimum = Integer.MIN_VALUE;
+        int currentMinIndex = -1;
+
+        for (int i = 0; i < column.length; i++) {
+
+            if (i == indexToSkip) {
+                continue;
+            }
+
+            if (currentMinimum > column[i]) {
+                currentMinimum = column[i];
+                currentMinIndex = i;
+            }
+        }
+
+        return new PairValue<>(currentMinimum, currentMinIndex);
+
     }
 
     @Override
